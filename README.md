@@ -2,8 +2,7 @@
 
 
 ## Notes
-The `requirements.txt` file should list all Python libraries that your notebooks
-depend on, and they will be installed using:
+The `requirements.txt` contains all the Python libraries that the project depends on.
 
 ```
 pip install -r requirements.txt
