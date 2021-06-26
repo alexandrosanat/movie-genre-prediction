@@ -19,11 +19,8 @@ def load_model():
 
     try:
         with open(model_path, 'rb') as filename:
-            loaded_data = joblib.load(filename)  # Loads the pre-trained pipeline and genres
-            model = loaded_data.get('pipeline')  # Get the pre-trained pipeline
-            genres = loaded_data.get('genres')  # Get the available genres
-
-            return model, genres
+            pickle = joblib.load(filename)  # Loads the pre-trained pipeline and genres
+            return pickle
 
     except FileNotFoundError:
         typer.echo("** Error: A trained model doesn't exist in the current directory. "
@@ -41,7 +38,9 @@ def predict(title: str, description: str, threshold: float):
     :return: output: A dictionary with the title, description and genre of the movie (dict)
     """
     pre_processed_text = tp.transform_text(title, description)  # Pre-process user input
-    model, genres = load_model()  # Load the model
+    pickle = load_model()  # Load the model
+    model = pickle.get('pipeline')  # Get the pre-trained pipeline
+    genres = pickle.get('genres')  # Get the available genres
     probabilities = model.predict_proba([pre_processed_text])  # Get the prediction from the model
     top_genres = np.where(probabilities >= threshold, 1, 0)  # Return genres with prob > threshold
     prediction = ", ".join(list(genres[top_genres[0] > 0]))  # Convert array of genres to list
@@ -55,6 +54,11 @@ def predict(title: str, description: str, threshold: float):
 def main(title: str = typer.Option(..., help="The name of the movie."),
          description: str = typer.Option(..., help="The description of the movie."),
          threshold: float = typer.Option(0.5, help="Threshold for probabilities to include.")):
+    """
+    DESCRIPTION: Movie Genre Prediction \n
+    You can use this module to predict a movie's genre given the movie's title and description. \n
+    e.g. python movie_classifier.py --title "Movie Title" --description "Movie Description"
+    """
     # Use inputs to predict the genre
     prediction = predict(title, description, threshold)
     # Print output
