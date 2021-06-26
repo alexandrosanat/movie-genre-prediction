@@ -15,6 +15,8 @@ except LookupError:
 def clean_text(text: str):
     """
     Applies basic pre-processing to clean a sentence
+    :param text: (str) A string of text that contains the movie title and description
+    :return: text: (str) Input string with only characters of the alphabet
     """
     text = text.replace("_", " ")  # replace underscores with space
     text = re.sub("\'", "", text)  # remove backslash-apostrophe
@@ -28,6 +30,8 @@ def clean_text(text: str):
 def lemmatise_text(token_list: list):
     """
     Converts a list of words to their lemmas.
+    :param token_list: (list) A list of tokenised words
+    :return: lemma_list: (list) A list of the lemmas of the word tokens
     """
     wordnet_lemmatizer = WordNetLemmatizer()
     lemma_list = []
@@ -40,6 +44,8 @@ def lemmatise_text(token_list: list):
 def filter_stopword(lemma_list: list):
     """
     Removes common stopwords for a list of words.
+    :param lemma_list: (list) A list of lemmatised words
+    :return: filtered_sentence: (str) A string of joined list of words excluding stopwords
     """
     filtered_sentence = []  # New list to store words
     nltk_stop_words = set(stopwords.words("english"))
@@ -53,9 +59,9 @@ def filter_stopword(lemma_list: list):
 def transform_text(title: str, description: str):
     """
     Applies a series of pre-processing steps to the inputs
-    :param title:
-    :param description:
-    :return:
+    :param title: (str) The movie title
+    :param description: (str) The movie description
+    :return: concatenated_text: (str) A transformed concatenated string of title and description
     """
 
     combined_text = " ".join([title, description])  # Concatenate the title and description fields
