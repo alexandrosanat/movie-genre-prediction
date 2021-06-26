@@ -2,6 +2,8 @@ import typer
 import text_processing as tp
 import joblib
 import numpy as np
+import os
+import json
 
 
 def load_model():
@@ -10,18 +12,27 @@ def load_model():
     :return: model: (Pipeline) A scikit learn pipeline object with the trained model
     :return: genres: (np.array) A numpy array of all the classes available for prediction
     """
-    model_path = "./movie_classifier_trained_model.pkl"  # Path to the trained model file
 
-    with open(model_path, 'rb') as filename:
-        loaded_data = joblib.load(filename)  # Loads the pre-trained pipeline and genres
-        model = loaded_data.get('pipeline')  # Get the pre-trained pipeline
-        genres = loaded_data.get('genres')  # Get the available genres
+    model_file = "movie_classifier_trained_model.pkl"  # Name to the trained model file
+    file_path = os.path.dirname(os.path.realpath(__file__))  # Get parent directory
+    model_path = os.path.join(file_path, model_file)  # Join directory to the model name
 
-    return model, genres
+    try:
+        with open(model_path, 'rb') as filename:
+            loaded_data = joblib.load(filename)  # Loads the pre-trained pipeline and genres
+            model = loaded_data.get('pipeline')  # Get the pre-trained pipeline
+            genres = loaded_data.get('genres')  # Get the available genres
+
+            return model, genres
+
+    except FileNotFoundError:
+        typer.echo("** Error: A trained model doesn't exist in the current directory. "
+                   "Please rerun the model_training.ipynb notebook to train and save the model.**")
+        exit()
 
 
 # Called when a request is received
-def predict(title: str, description: str, threshold: int):
+def predict(title: str, description: str, threshold: float):
     """
     Uses the pre-trained model to predict the movie genre given a title and a description
     :param title: The name of the movie (str)
@@ -33,11 +44,12 @@ def predict(title: str, description: str, threshold: int):
     model, genres = load_model()  # Load the model
     probabilities = model.predict_proba([pre_processed_text])  # Get the prediction from the model
     top_genres = np.where(probabilities >= threshold, 1, 0)  # Return genres with prob > threshold
-    prediction = list(genres[top_genres[0] > 0])  # Convert array of genres to list
+    prediction = ", ".join(list(genres[top_genres[0] > 0]))  # Convert array of genres to list
+    prediction = prediction if len(prediction) > 0 else 'Unknown'  # Return unknown if no prediction
 
-    return {"title": title,
-            "description": description,
-            "genre": prediction}
+    return json.dumps({"title": title,
+                       "description": description,
+                       "genre": prediction}, indent=4)
 
 
 def main(title: str = typer.Option(..., help="The name of the movie."),
@@ -47,9 +59,8 @@ def main(title: str = typer.Option(..., help="The name of the movie."),
     prediction = predict(title, description, threshold)
     # Print output
     typer.echo(prediction)
+    return prediction
 
 
 if __name__ == '__main__':
     typer.run(main)
-
-
