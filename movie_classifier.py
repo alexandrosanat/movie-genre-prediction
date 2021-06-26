@@ -4,61 +4,47 @@ import joblib
 import numpy as np
 
 
-# Create a new typer app
-app = typer.Typer()
-
-
-# Called when the app is loaded
 def load_model():
-    # Get the path to the trained model file and load it
-    model_path = "./movie_classifier_trained_model.pkl"
+
+    model_path = "./movie_classifier_trained_model.pkl"  # Path to the trained model file
 
     with open(model_path, 'rb') as filename:
-        loaded_data = joblib.load(filename)
-        model = loaded_data['pipeline']
-        genres = loaded_data['genres']
+        loaded_data = joblib.load(filename)  # Loads the pre-trained pipeline and genres
+        model = loaded_data.get('pipeline')  # Get the pre-trained pipeline
+        genres = loaded_data.get('genres')  # Get the available genres
 
     return model, genres
 
 
 # Called when a request is received
-def predict(title: str, description: str):
+def predict(title: str, description: str, threshold: int):
     """
-    :param title:
-    :param description:
-    :return:
+    :param title: The name of the movie. (str)
+    :param description: The description of the movie. (str)
+    :param threshold:
+    :return: output: A dictionary with the title, description and genre of the movie
     """
-    # Pre-process user input
-    pre_processed_text = tp.transform_text(title, description)
-    # Load the model
-    model, genres = load_model()
-    # Get a prediction from the model
-    probabilities = model.predict_proba([pre_processed_text])
-    threshold = 0.5
-    top_genres = np.where(probabilities > threshold, 1, 0)
-    prediction = list(genres[top_genres[0] > 0])
+    pre_processed_text = tp.transform_text(title, description)  # Pre-process user input
+    model, genres = load_model()  # Load the model
+    probabilities = model.predict_proba([pre_processed_text])  # Get a prediction from the model
+    top_genres = np.where(probabilities > threshold, 1, 0)  # Return genres with prob > threshold
+    prediction = list(genres[top_genres[0] > 0])  # Convert array of genres to list
 
-    # Return the prediction
-    output = {"title": title,
-              "description": description,
-              "genre": prediction}
-    return output
+    return {"title": title,
+            "description": description,
+            "genre": prediction}
 
 
-@app.command()
-def main(title: str = typer.Option(...,
-                                   "--title",
-                                   help="The name of the movie. (str)"),
-         description: str = typer.Option(...,
-                                         "--description",
-                                         help="The description of the movie. (str)")):
+def main(title: str = typer.Option(..., help="The name of the movie."),
+         description: str = typer.Option(..., help="The description of the movie."),
+         threshold: float = typer.Option(0.5, help="Threshold for probabilities to include.")):
     # Use inputs to predict the genre
-    prediction = predict(title, description)
+    prediction = predict(title, description, threshold)
 
     typer.echo(prediction)
 
 
 if __name__ == '__main__':
-    app()
+    typer.run(main)
 
 

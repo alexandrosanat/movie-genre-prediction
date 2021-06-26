@@ -1,10 +1,8 @@
-import re
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import *
-import joblib
 
 
 # Check if the tokenizer exists and download if not
@@ -16,29 +14,15 @@ except LookupError:
 
 def clean_text(text: str):
     """
-    Applies basic pre-processing to clean text
+    Applies basic pre-processing to clean a sentence
     """
-    # replace underscores with space
-    text = text.replace("_", " ")
-    # remove backslash-apostrophe
-    text = re.sub("\'", "", text)
-    # remove everything except alphabets
-    text = re.sub("[^a-zA-Z]", " ", text)
-    # remove whitespaces
-    text = ' '.join(text.split())
-    # convert text to lowercase
-    text = text.lower()
+    text = text.replace("_", " ")  # replace underscores with space
+    text = re.sub("\'", "", text)  # remove backslash-apostrophe
+    text = re.sub("[^a-zA-Z]", " ", text)  # remove everything except alphabets
+    text = ' '.join(text.split())  # remove whitespaces
+    text = text.lower()  # convert text to lowercase
 
     return text
-
-
-def tokenise_text(text: str):
-    """
-    Converts a string to a list of words.
-    """
-    # Convert a sentence to words
-    toke_list = word_tokenize(text)
-    return toke_list
 
 
 def lemmatise_text(token_list: list):
@@ -66,15 +50,6 @@ def filter_stopword(lemma_list: list):
     return filtered_sentence
 
 
-def vectorise_text(text: str):
-    # Get the path to the trained model file and load it
-    vectoriser_path = "./movie_genre_vectoriser.pkl"
-    with open(vectoriser_path, 'rb') as filename:
-        vectoriser = joblib.load(filename)
-
-    return vectoriser.transform([text])
-
-
 def transform_text(title: str, description: str):
     """
     Applies a series of pre-processing steps to the inputs
@@ -82,17 +57,12 @@ def transform_text(title: str, description: str):
     :param description:
     :return:
     """
-    # Concatenate the title and the description fields
-    combined_text = " ".join([title, description])
-    # Remove unwanted chars, lower case
-    text = clean_text(combined_text)
-    # Convert the combined string to a list of words
-    tokens = tokenise_text(text)
-    # Converts the list of tokens to their lemmas.
-    lemmas = lemmatise_text(tokens)
-    # Filters out stopwords
-    processed_text = filter_stopword(lemmas)
-    # Joins all words back to a string
-    concatenated_text = " ".join(processed_text)
+
+    combined_text = " ".join([title, description])  # Concatenate the title and description fields
+    text = clean_text(combined_text)  # Apply basic text cleaning
+    tokens = word_tokenize(text)  # Convert the combined string to a list of words
+    lemmas = lemmatise_text(tokens)  # Converts the list of tokens to their lemmas.
+    processed_text = filter_stopword(lemmas)  # Filters out stopwords
+    concatenated_text = " ".join(processed_text)  # Joins all words back to a string
 
     return concatenated_text
