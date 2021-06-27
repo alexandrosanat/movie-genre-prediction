@@ -8,9 +8,8 @@ import json
 
 def load_model():
     """
-    Loads the pre-trained model and the model classes
-    :return: model: (Pipeline) A scikit learn pipeline object with the trained model
-    :return: genres: (np.array) A numpy array of all the classes available for prediction
+    Loads the pre-trained model and the model classes from file
+    :return: pickle: (pickle) A collection of objects including the model and other
     """
 
     model_file = "movie_classifier_trained_model.pkl"  # Name to the trained model file
@@ -29,21 +28,34 @@ def load_model():
 
 
 # Called when a request is received
-def predict(title: str, description: str, threshold: float):
+def predict(title: str, description: str, top: bool = True, threshold: float = None):
     """
     Uses the pre-trained model to predict the movie genre given a title and a description
-    :param title: The name of the movie (str)
-    :param description: The description of the movie (str)
-    :param threshold: The threshold above which probabilities will be considered (float)
-    :return: output: A dictionary with the title, description and genre of the movie (dict)
+    :param title: (str) The name of the movie
+    :param description: (str) The description of the movie
+    :param top: (bool) Whether to return the top result only or not
+    :param threshold: (float) The threshold above which probabilities will be considered
+    :return: output: (dict) A dictionary with the title, description and genre of the movie
     """
+
     pre_processed_text = tp.transform_text(title, description)  # Pre-process user input
+
     pickle = load_model()  # Load the model
     model = pickle.get('pipeline')  # Get the pre-trained pipeline
     genres = pickle.get('genres')  # Get the available genres
+    threshold = pickle.get('threshold') if threshold is None else threshold  # The model threshold
     probabilities = model.predict_proba([pre_processed_text])  # Get the prediction from the model
-    top_genres = np.where(probabilities >= threshold, 1, 0)  # Return genres with prob > threshold
-    prediction = ", ".join(list(genres[top_genres[0] > 0]))  # Convert array of genres to list
+
+    sorted_index = (-probabilities).argsort()   # Sort indices in descending order
+    probabilities_sorted = probabilities[0][sorted_index[::-1]]  # Sort probabilities in desc order
+    sorted_genres = genres[sorted_index[::-1]]  # Sort genres in descending order
+    top_genres = np.where(probabilities_sorted >= threshold, 1, 0)  # Genres with prob > threshold
+    if top:
+        prediction = sorted_genres[0].tolist()[0]
+    else:
+        # Convert genre array to list
+        prediction = ", ".join(list(sorted_genres[0][top_genres[0] > 0]))
+
     prediction = prediction if len(prediction) > 0 else 'Unknown'  # Return unknown if no prediction
 
     return json.dumps({"title": title,
@@ -53,14 +65,15 @@ def predict(title: str, description: str, threshold: float):
 
 def main(title: str = typer.Option(..., help="The name of the movie."),
          description: str = typer.Option(..., help="The description of the movie."),
-         threshold: float = typer.Option(0.5, help="Threshold for probabilities to include.")):
+         top: bool = typer.Option(True, help="Only return the top result."),
+         threshold: float = typer.Option(0.5, help="The confidence threshold for the model.")):
     """
     DESCRIPTION: Movie Genre Prediction \n
     You can use this module to predict a movie's genre given the movie's title and description. \n
     e.g. python movie_classifier.py --title "Movie Title" --description "Movie Description"
     """
     # Use inputs to predict the genre
-    prediction = predict(title, description, threshold)
+    prediction = predict(title, description, top, threshold)
     # Print output
     typer.echo(prediction)
     return prediction

@@ -38,7 +38,7 @@ class TestMovieClassifier(unittest.TestCase):
         """
         Test that the pickle contains all necessary data.
         """
-        self.assertEqual([item for item in self.pickle], ['pipeline', 'genres'])
+        self.assertEqual([item for item in self.pickle], ['pipeline', 'genres', 'threshold'])
 
     def test_pipeline_steps(self):
         """
