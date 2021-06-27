@@ -64,8 +64,7 @@ class TestMovieClassifier(unittest.TestCase):
         test_input = self.test_input
 
         output = json.loads(movie_classifier.main(test_input.get('title'),
-                                                  test_input.get('description'),
-                                                  test_input.get('threshold')))
+                                                  test_input.get('description')))
 
         # Check that the returned genres match the expected
         self.assertEqual(output.get('title'), test_input.get('title'))

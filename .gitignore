@@ -134,3 +134,4 @@ dmypy.json
 # Exclude all data from data folder
 data/*.csv
 data/*.zip
+nltk_data/
