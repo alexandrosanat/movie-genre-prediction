@@ -41,6 +41,9 @@ To run the app in your workspace follow the steps below:
 * Create and activate a new
  [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 * Install the required packages by running:
+    ```
+    pip install -r requirements.txt
+    ```
 * Open a new terminal, cd into the movie-genre-prediction repo and run the app using:
     ```
     python movie_classifier.py --title "<title>" -- description "<description>"
