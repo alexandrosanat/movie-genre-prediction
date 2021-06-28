@@ -48,6 +48,8 @@ To run the app in your workspace follow the steps below:
     ```
     python movie_classifier.py --title "<title>" -- description "<description>"
     ```
+  
+ ![Alt Text](./images/running_python.gif)
 
 #### Option 2 - using Docker
 
@@ -67,8 +69,7 @@ To run the app in your workspace follow the steps below:
     docker run -it --name my_app --rm genre_classifier
     ```
 
-
-![Alt Text](./__.gif)
+![Alt Text](./images/running_docker.gif)
 
 ## Help
 
