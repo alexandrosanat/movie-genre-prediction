@@ -8,7 +8,7 @@ import json
 def load_model():
     """
     Loads the pre-trained model and the model classes from file
-    :return: pickle: (pickle) A collection of objects including the model and other
+    :return: pickle: (pickle) A collection of objects including the model and the movie genres
     """
 
     model_file = "movie_classifier_trained_model.pkl"  # Name to the trained model file
@@ -43,7 +43,7 @@ def predict(title: str, description: str):
 
     sorted_index = (-probabilities).argsort()   # Sort indices in descending order
     sorted_genres = genres[sorted_index[::-1]]  # Sort genres according to the indices
-    prediction = sorted_genres[0][0]
+    prediction = sorted_genres[0][0]  # Get the most likely genre
 
     return json.dumps({"title": title,
                        "description": description,
