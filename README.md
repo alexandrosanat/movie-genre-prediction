@@ -109,6 +109,10 @@ To run the app in your workspace follow the steps below:
    ```
    docker pull alexandrosanat/movie-genre-prediction:latest
    ```
+* Once the image is downloaded, run the app using:
+    ```
+    docker run -it --name my_app --rm alexandrosanat/movie-genre-prediction
+    ``` 
 * Alternatively:
     * Navigate to a folder where you want to clone the repo
     * Clone the repo using:
@@ -120,10 +124,10 @@ To run the app in your workspace follow the steps below:
         ```
         docker build -t movie-genre-prediction --rm .
         ```
-* Once the image is build or downloaded, run the app using:
-    ```
-    docker run -it --name my_app --rm movie-genre-prediction
-    ```
+    * Once the image is build, run the app using:
+        ```
+        docker run -it --name my_app --rm movie-genre-prediction
+        ```
 
 
 ![Alt Text](./images/running_docker.gif)
