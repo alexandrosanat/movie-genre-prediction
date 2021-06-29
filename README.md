@@ -1,10 +1,20 @@
 # Movie Genre Classifier
 
-A command-line application that predicts a movie's top genre given its title and description.
+A command-line application that predicts a movie's top genre given its title and
+ description.
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+The app uses a logistic regression algorithm trained on the
+["The Movies Dataset"](https://www.kaggle.com/rounakbanik/the-movies-dataset?select=movies_metadata.csv) 
+data from Kaggle to predict the most relevant (i.e. likely) genre of a movie. The dataset consists 
+of movies released on or before July 2017. Data points include among other, the movie title and
+description that are used in this project.
+
+Since a movie can belong to multiple genres, this is a treated as a multi-label classification 
+problem. There are 20 genres identified in the dataset and probabilities are returned for each
+one based on a movie's title and description. The genre with the highest probability is returned.
+
 
 ## Getting Started
 
@@ -62,38 +72,55 @@ To run the app in your workspace follow the steps below:
     ```
     docker build -t genre_classifier --rm .
     ```
-  Alternatively you can download the build image directly from
-   [here](https://hub.docker.com/repository/docker/alexandrosanat/movie-genre-prediction).
-* Once the image is build run the app using:
+  Alternatively you can pull the build image directly from
+   [here](https://hub.docker.com/repository/docker/alexandrosanat/movie-genre-prediction) using:
+    ```
+   docker pull alexandrosanat/movie-genre-prediction:latest
+   ```
+
+* Once the image is build or downloaded, run the app using:
     ```
     docker run -it --name my_app --rm genre_classifier
     ```
 
 ![Alt Text](./images/running_docker.gif)
 
-## Help
+### Retraining the model
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+The analysis of the dataset and the model training, evaluation and selection can be found in the
+[model_training.ipynb](https://github.com/alexandrosanat/movie-genre-prediction/blob/main/model_training.ipynb)
+notebook. 
+
+To retrain the model you will need to install the additional packages required by running:
+    ```
+    pip install -r requirements - model training.txt
+    ```
+
+
+## To-Do
+
+- [ ] Add Logging
+- [ ] Add Option for user to select probability threshold
+- [ ] Add Option for user to select number of genres to return
+- [ ] Add Option for user to pass multiple movies and descriptions at once
+- [ ] Improve model performance
+- [ ] Improve app performance
+
 
 ## Authors
 
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+- Alex Anatolakis
 
 ## Version History
 
 * 0.1
     * Initial Release
 
-
 ## Acknowledgments
 
 * [Predicting Movie Genres using NLP](https://www.analyticsvidhya.com/blog/2019/04/predicting-movie-genres-nlp-multi-label-classification/)
 
+## License
 
-* Add logging
+* [MIT License](https://github.com/alexandrosanat/movie-genre-prediction/blob/main/LICENSE)
+
