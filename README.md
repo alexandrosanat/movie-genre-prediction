@@ -104,26 +104,27 @@ To run the app in your workspace follow the steps below:
 #### Option 2 - using Docker
 
 * Open a new terminal 
-* Navigate to a folder where you want to clone the repo
-* Clone the repo using:
-    ```
-    git clone https://github.com/alexandrosanat/movie-genre-prediction.git
-    ```
-* Change Directory into the movie-genre-prediction repo you downloaded
-* Build the docker image using:
-    ```
-    docker build -t genre_classifier --rm .
-    ```
-  Alternatively you can pull the build image directly from
+* Pull the build image directly from
    [here](https://hub.docker.com/repository/docker/alexandrosanat/movie-genre-prediction) using:
    ```
    docker pull alexandrosanat/movie-genre-prediction:latest
    ```
-
+* Alternatively:
+    * Navigate to a folder where you want to clone the repo
+    * Clone the repo using:
+        ```
+        git clone https://github.com/alexandrosanat/movie-genre-prediction.git
+        ```
+    * Change Directory into the movie-genre-prediction repo you downloaded
+    * Build the docker image using:
+        ```
+        docker build -t movie-genre-prediction --rm .
+        ```
 * Once the image is build or downloaded, run the app using:
     ```
-    docker run -it --name my_app --rm genre_classifier
+    docker run -it --name my_app --rm movie-genre-prediction
     ```
+
 
 ![Alt Text](./images/running_docker.gif)
 
