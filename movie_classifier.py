@@ -57,14 +57,19 @@ def main(title: str = typer.Option(..., help="The name of the movie."),
     You can use this module to predict a movie's genre given a movie title and description. \n
     e.g. python movie_classifier.py --title "Movie Title" --description "Movie Description"
     """
-    if len(description) == 0 or len(description.split(" ")) < 5:
-        print("Please enter a description that is at least 5 words long and try again.")
+    if len(title) == 0 and len(description) == 0:
+        print("The title and description fields can't be empty. "
+              "Please provide values and try again.")
+        exit()
+    elif len(title) == 0:
+        print("The title field can't be empty. Please input a title and try again.")
+        exit()
+    elif len(description) == 0:
+        print("The description field can't be empty. Please input a description and try again.")
         exit()
     else:
-        # Use inputs to predict the genre
-        prediction = predict(title, description)
-        # Print output
-        typer.echo(prediction)
+        prediction = predict(title, description)  # Use inputs to predict the genre
+        typer.echo(prediction)  # Print output
         return prediction
 
 

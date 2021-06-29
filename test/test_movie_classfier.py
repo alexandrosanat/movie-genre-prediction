@@ -38,7 +38,7 @@ class TestMovieClassifier(unittest.TestCase):
         """
         Test that the pickle contains all necessary data.
         """
-        self.assertEqual([item for item in self.pickle], ['pipeline', 'genres', 'threshold'])
+        self.assertEqual([item for item in self.pickle], ['pipeline', 'genres'])
 
     def test_pipeline_steps(self):
         """
@@ -69,7 +69,7 @@ class TestMovieClassifier(unittest.TestCase):
         # Check that the returned genres match the expected
         self.assertEqual(output.get('title'), test_input.get('title'))
         self.assertEqual(output.get('description'), test_input.get('description'))
-        self.assertEqual(output.get('genre'), 'Action, Science Fiction')
+        self.assertEqual(output.get('genre'), 'Science Fiction')
 
 
 if __name__ == "__main__":
