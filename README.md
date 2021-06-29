@@ -135,7 +135,7 @@ notebook.
 
 To retrain the model you will need to install the additional packages required by running:
    ``` 
-   pip install -r requirements - model training.txt
+   pip install -r requirements-model-training.txt
    ```
 
 ## Help

@@ -13,7 +13,7 @@ def load_model():
 
     model_file = "movie_classifier_trained_model.pkl"  # Name to the trained model file
     file_path = os.path.dirname(os.path.realpath(__file__))  # Get parent directory
-    model_path = os.path.join(file_path, model_file)  # Join directory to the model name
+    model_path = os.path.join(file_path, 'model', model_file)  # Join directory to the model name
 
     try:
         with open(model_path, 'rb') as filename:
