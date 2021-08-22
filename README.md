@@ -1,6 +1,6 @@
 # Movie Genre Classifier
 
-A command-line application that predicts a movie's top genre given its title and
+A command-line application that uses ML to predict a movie's top genre given its title and
  description.
 
 ## Description
